@@ -8,6 +8,7 @@ import { JwtToken } from './JwtToken'
  * @param jwtToken JWT token to parse
  * @returns a user id from the JWT token
  */
+
 function parseUserId(jwtToken: string): string {
   const decodedJwt = decode(jwtToken) as JwtToken
   

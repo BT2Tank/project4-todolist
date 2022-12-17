@@ -16,6 +16,7 @@ export const handler = middy(
     logger.info('Starting update todo ', event);
     const todoId = event.pathParameters.todoId;
     const userId: string = getUserId(event);
+    // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
     const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
     logger.info('Update todo ', updatedTodo)
 

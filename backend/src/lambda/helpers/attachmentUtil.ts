@@ -15,7 +15,8 @@ export function createAttachmentPresignedUrl(todoId: string): string {
     Bucket: bucketName,
     Key: todoId,
     Expires: parseInt(urlExpiration)
-  })
+  }
+  )
 }
 
 export async function removeAttachment(id: string): Promise<void> {

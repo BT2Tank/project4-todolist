@@ -12,6 +12,7 @@ const logger = createLogger('attachment');
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info('Processing event: ', event);
+    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
     const todoId = event.pathParameters.todoId;
     const uploadUrl = createAttachmentPresignedUrl(todoId);
 

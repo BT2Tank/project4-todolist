@@ -29,7 +29,7 @@ export async function createTodo(
   })
   return response.data.item
 }
-
+  
 export async function patchTodo(
   idToken: string,
   todoId: string,
@@ -40,7 +40,8 @@ export async function patchTodo(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
-  })
+  }
+  )
 }
 
 export async function patchTodoAttachment(
@@ -52,7 +53,8 @@ export async function patchTodoAttachment(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
-  })
+  }
+  )
 }
 
 export async function deleteTodo(
