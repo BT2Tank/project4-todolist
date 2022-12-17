@@ -1,6 +1,7 @@
-org: nguyenlecao
+app: btank-serverless-todo-app
+org: btanks297
 console: true
-service: nguyenlc1-serverless-todo-app
+service: btank-serverless-todo-app
 
 plugins:
   - serverless-webpack
@@ -24,10 +25,12 @@ provider:
     lambda: true
     apiGateway: true
 
+  # Use these variables in the functions and resouorces section below. For example, 
+  # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: nguyenlc1-todos-${self:provider.stage}
+    TODOS_TABLE: btank-todos-${self:provider.stage}
     TODOS_INDEX: UserIdIndex
-    ATTACHMENT_S3_BUCKET: nguyenlc1-serverless-todo-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: btank-serverless-todo-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -54,6 +57,8 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
+  # TODO: Configure this function - 
+  # Provide iamRoleStatements property for performing Actions on DynamoDB
   GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
@@ -72,7 +77,10 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_INDEX}
 
-
+  # TODO: Configure this function - 
+  # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
+  # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
+  # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
     events:
@@ -92,6 +100,8 @@ functions:
         Action:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+  # TODO: Configure this function
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
 
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
@@ -113,6 +123,8 @@ functions:
           - dynamodb:UpdateItem
           - dynamodb:GetItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+  # TODO: Configure this function
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
 
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
@@ -133,6 +145,8 @@ functions:
           - s3:DeleteObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
+  # TODO: Configure this function
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
@@ -184,7 +198,7 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: ApiGatewayRestApi
-    
+   # TODO: Create a DynamoDB table with local secondary index and a composite key 
     TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -230,7 +244,9 @@ resources:
                 - DELETE
                 - HEAD
               MaxAge: 3000
-
+   
+    # TODO: Complete the policy below and attach it to the bucket defined above
+    # For cross referencing the name of the bucket, use "!Ref AttachmentsBucket"
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
